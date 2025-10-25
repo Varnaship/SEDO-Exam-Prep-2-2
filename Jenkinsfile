@@ -1,22 +1,19 @@
 pipeline {
     agent any
-
     stages {
-        stage('Checkout') {
+        stage('Restore .NET Packages') {
             steps {
-                checkout scm
+                bat 'dotnet restore'
             }
         }
-
-        stage('Build') {
+        stage('Build .NET Project') {
             steps {
-                sh 'dotnet build --configuration Release'
+                bat 'dotnet build --no-restore'
             }
         }
-
-        stage('Test') {
+        stage('Run Unit and Integration Tests') {
             steps {
-                sh 'dotnet test --no-build --verbosity normal'
+                bat 'dotnet test --no-build --verbosity normal'
             }
         }
     }
